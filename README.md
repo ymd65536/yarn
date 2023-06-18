@@ -73,5 +73,22 @@ yarn versions
 - aws codeartifact npmRegistries
 
 ```sh
-CODEARTIFACT_URL="https://my_domain-111122223333.d.codeartifact.region.amazonaws.com/npm/my_repo/" && CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain my_domain --domain-owner 111122223333 --query authorizationToken --output text` && yarn config set 'npmRegistries["$CODEARTIFACT_URL"].npmAuthToken' "${CODEARTIFACT_AUTH_TOKEN}" && yarn config set 'npmRegistries["$CODEARTIFACT_URL"].npmAlwaysAuth' "true"
+export AWS_DOMAIN="my_domain"
+export AWS_ACCOUNT_ID=`aws sts get-caller-identity --profile {profile_name} --query 'Account' --output text` &&  echo $AWS_ACCOUNT_ID
+```
+
+```sh
+aws codeartifact get-repository-endpoint --domain $AWS_DOMAIN --domain-owner $AWS_ACCOUNT_ID --repository my_repo --format npm
+```
+
+```sh
+export CODEARTIFACT_URL="https://$AWS_DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.region.amazonaws.com/npm/my_repo/"
+```
+
+```sh
+yarn config set npmRegistryServer "$CODEARTIFACT_URL"
+```
+
+```sh
+CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain $AWS_DOMAIN --domain-owner $AWS_ACCOUNT_ID --query authorizationToken --output text` && yarn config set 'npmRegistries["$CODEARTIFACT_URL"].npmAuthToken' "${CODEARTIFACT_AUTH_TOKEN}" && yarn config set 'npmRegistries["$CODEARTIFACT_URL"].npmAlwaysAuth' "true"
 ```
