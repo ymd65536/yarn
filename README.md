@@ -63,3 +63,15 @@ yarn set version latest
 ```sh
 yarn versions
 ```
+
+## yarn config
+
+### config set
+
+#### Examples
+
+- aws codeartifact npmRegistries
+
+```sh
+CODEARTIFACT_URL="https://my_domain-111122223333.d.codeartifact.region.amazonaws.com/npm/my_repo/" && CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain my_domain --domain-owner 111122223333 --query authorizationToken --output text` && yarn config set 'npmRegistries["$CODEARTIFACT_URL"].npmAuthToken' "${CODEARTIFACT_AUTH_TOKEN}" && yarn config set 'npmRegistries["$CODEARTIFACT_URL"].npmAlwaysAuth' "true"
+```
